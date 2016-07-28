@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block header_title %}
+    Wishlist
+{% endblock header_title %}
+
+
+{% block menu_title %}
+    Wishlist
+{% endblock menu_title %}
+
+{% block content %}
+
+
+{% if request.user.is_authenticated %}
+
+<div class="single-product-area">
+    <div class="container">
+        <div class="col-md-8">
+            <div class="product-content-right">
+                <div class="woocommerce">
+
+                        <table cellspacing="0" class="shop_table cart">
+                            <thead>
+                                <tr>
+                                    <th class="product-thumbnail" colspan="2">Product</th>
+                                    <th class="product-name">Price</th>
+                                    <th class="product-price">&nbsp;</th>
+                                </tr>
+                            </thead>
+
+                            {% for object in wishlist.all %}
+                                {% for product in object.product.all %}
+
+                                    <tbody>
+                                        <tr class="cart_item">
+
+
+                                            <td class="product-thumbnail">
+                                                <a href="{% url 'product_view' product.category.slug product.slug %}"><img width="145" height="145" alt="poster_1_up" class="shop_thumbnail" src="{{ MEDIA_URL }}{{ product.cover }}"></a>
+                                            </td>
+
+                                            <td class="product-subtotal">
+                                                <a href="{% url 'product_view' product.category.slug product.slug %}">
+                                                    <span class="amount">{{ product.title }}</span>
+                                                </a>
+                                            </td>
+
+                                            <td class="product-price">
+                                                <span class="amount">{{ product.price|floatformat:"-2" }} $</span>
+                                            </td>
+
+                                            <td class="product-remove">
+                                                <form action="{% url 'wishlist_add_remove' %}" class="cart" method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" value="{{ product.id }}" name="product_id">
+                                                    <button class="remove" style="display: inline; background: none; border: 0; color: #000; outline: none;" type="submit" title="Remove from wishlist">x</button>
+                                                </form>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                {% endfor %}
+                            {% endfor %}
+
+                        </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock content %}
+
+

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block header_title %}
+    {{ product.title }}
+{% endblock header_title %}
+
+
+{% block title_area %}
+{% endblock title_area %}
+
+{% block content %}
+
+	<div class="maincontent-area">
+		<div class="container">
+			{% if not request.user.is_authenticated %}
+				<div>
+					<form action='{% url 'login' %}' method='post'>
+
+						{% csrf_token %}
+						<br>
+						<label for='username'> User Name: </label></br>
+						<input type="text" name="username" id="username"></br></br>
+						<label for="password">Pass: </label></br>
+						<input type="password" name="password" id="password"></br>
+						{% if login_error %}
+							<label class="error">{{ login_error }}</label>
+						{% endif %}
+						</br><input class="button" type="submit" value="Enter">
+
+					</form>
+				</div>
+			{% else %}
+				<p align="center">Вы уже авторизированы!</p>
+			{% endif %}
+		</div>
+	</div>
+
+{% endblock content %}

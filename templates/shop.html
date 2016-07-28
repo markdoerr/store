@@ -1,0 +1,119 @@
+    {% extends 'base.html' %}
+{% load static %}
+
+
+{% block header_title %}
+    {{ category_slug|title }}
+{% endblock header_title %}
+
+
+{% block menu-Shop-class %}
+    class="active"
+{% endblock menu-Shop-class %}
+
+
+{% block menu_title %}
+    {{ category_slug|title }}
+{% endblock menu_title %}
+
+
+{% block content %}
+
+    <div class="single-product-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+
+            {% for product in products %}
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-shop-product">
+                        <div class="product-upper">
+                            <a href="{% url 'product_view' category_slug product.slug %}"><img src="{{ MEDIA_URL }}{{ product.cover }}" alt=""></a>
+                        </div>
+                        <h2><a href="{% url 'product_view' category_slug product.slug %}">{{ product.title|truncatechars:27 }}</a></h2>
+                        <div class="product-carousel-price">
+
+                            {% if product.old_price == None %}
+                                <ins>${{ product.price|floatformat:"-2" }}</ins>
+                            {% else %}
+                                <ins style="color:#f95f5f">${{ product.price|floatformat:"-2" }}</ins>
+                            {% endif %}
+
+                            {% if product.old_price != None %}
+                                <del style="color:#5a88ca">${{ product.old_price|floatformat:"-2" }}</del>
+                            {% endif %}
+
+                        </div>
+                        <div class="product-option-shop">
+                            <form action="{% url 'cart_add' %}" class="cart" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ product.id }}" name="product_id">
+                            {% if not product.is_in_cart %}
+                             <button id="add_to_cart" class="add_to_cart_button" type="submit" name="blabla">Add to cart</button>
+                            {% else %}
+                             <button id="add_to_cart" class="add_to_cart_button" type="submit" name="blabla">In cart</button>
+                            {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="product-pagination text-center">
+                        <nav>
+                            <ul class="pagination">
+
+                                {% if page_obj.has_previous %}
+                                    <li>
+                                        <a href="{% url 'shop_page' category_slug page_obj.previous_page_number %}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="disabled">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </li>
+                                {% endif %}
+
+                                {% for page in page_obj.paginator.page_range %}
+                                    {% if page == page_obj.number %}
+                                        <li class="active">
+                                           <a>{{ page }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <a href="{% url 'shop_page' category_slug page %}">{{ page }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if page_obj.has_next %}
+                                    <li>
+                                        <a href="{% url 'shop_page' category_slug page_obj.next_page_number %}">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="disabled">
+                                        <a aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

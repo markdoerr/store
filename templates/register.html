@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block header_title %}
+	{{ product.title }}
+{% endblock header_title %}
+
+
+{% block title_area %}
+{% endblock title_area %}
+
+{% block content %}
+
+	<div class="maincontent-area">
+		<div class="container">
+			{% if not request.user.is_authenticated %}
+				<div>
+					<form action='{% url 'register' %}' method='post'>
+
+						{% csrf_token %}
+						{% for x in form %}
+
+							<div>{{ x.label_tag }}</div>
+							<div>{{ x }}</div>
+							{{ x.errors }}
+							</br>
+						{% endfor %}
+
+						<br>
+						<input class='button' type='submit' value='Registr'>
+					</form>
+				</div>
+			{% else %}
+				<p align="center">Вы уже авторизированы!</p>
+			{% endif %}
+		</div>
+	</div>
+
+{% endblock content %}

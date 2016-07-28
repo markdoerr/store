@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title_area %}
+{% endblock title_area %}
+
+
+{% block header_title %}
+		{{ product.title }}
+{% endblock header_title %}
+
+
+{% block menu-Shop-class %}
+		class="active"
+{% endblock menu-Shop-class %}
+
+
+{% block menu_title %}
+		{{ product.title|truncatechars:35 }}
+{% endblock menu_title %}
+
+
+{% block content %}
+
+<div class="single-product-area">
+				<div class="zigzag-bottom"></div>
+				<div class="container">
+						<div class="row">
+								<div class="col-md-4">
+										<div class="single-sidebar">
+												<h2 class="sidebar-title">Search Products</h2>
+												<form action="">
+														<input type="text" placeholder="Search products...">
+														<input type="submit" value="Search">
+												</form>
+										</div>
+
+										<div class="single-sidebar">
+												<h2 class="sidebar-title">Products</h2>
+												{% for product in products %}
+														<div class="thubmnail-recent">
+																<a href="{% url 'product_view' category_slug product.slug %}"><img src="{{ MEDIA_URL }}{{ product.cover }}" class="recent-thumb" alt=""></a>
+																<h2><a href="{% url 'product_view' category_slug product.slug %}">{{ product.title|truncatechars:23 }}</a></h2>
+																<div class="product-sidebar-price">
+
+																		{% if product.old_price == None %}
+																				<ins>${{ product.price|floatformat:"-2" }}</ins>
+																		{% else %}
+																				<ins style="color:#f95f5f">${{ product.price|floatformat:"-2" }}</ins>
+																		{% endif %}
+
+																		{% if product.old_price != None %}
+																				<del style="color:#5a88ca">${{ product.old_price|floatformat:"-2" }}</del>
+																		{% endif %}
+
+																</div>
+														</div>
+												{% endfor %}
+										</div>
+
+										<div class="single-sidebar">
+												<h2 class="sidebar-title">Recent Posts</h2>
+												<ul>
+														<li><a href="">Sony Smart TV - 2015</a></li>
+												</ul>
+										</div>
+								</div>
+
+								<div class="col-md-8">
+										<div class="product-content-right">
+												<div class="product-breadcroumb">
+														<a href="{% url 'categories' %}">Shop</a>
+														<a href="{% url 'shop' category_slug %}">{{ product.category }}</a>
+														<a style="underline">{{ product.title }}</a>
+												</div>
+
+
+												<div class="row">
+														<div class="col-sm-6">
+																<div class="product-images">
+																		<div class="product-main-img">
+																				<img src="{{ MEDIA_URL }}{{ product.cover }}" alt="">
+																		</div>
+																		<div class="product-gallery">
+
+																		{% for image in product.images_set.all %}
+																				<img src="{{ MEDIA_URL }}{{ image.url }}" alt="">
+																		{% endfor %}
+
+																		</div>
+																</div>
+														</div>
+
+														<div class="col-sm-6">
+																<div class="product-inner">
+																		<h2 class="product-name">{{ product.title }}</h2>
+																		<div class="product-inner-price">
+
+																				{% if product.old_price == None %}
+																						<ins>${{ product.price|floatformat:"-2" }}</ins>
+																				{% else %}
+																						<ins style="color:#f95f5f">${{ product.price|floatformat:"-2" }}</ins>
+																				{% endif %}
+
+																				{% if product.old_price != None %}
+																						<del style="color:#5a88ca">${{ product.old_price|floatformat:"-2" }}</del>
+																				{% endif %}
+
+																		</div>
+
+																				<form action="{% url 'wishlist_add_remove' %}" class="cart" method="POST" style="margin: 0px 0px 25px 20px;">
+																						{% csrf_token %}
+
+																						<input type="hidden" value="{{ product.id }}" name="product_id">
+
+																						{% if request.user.is_authenticated and wishlist_product == 0 %}
+																										<button class="add_to_cart_button" id="add_to_wishlist" type="submit" title="Add to wishlist"><i class="fa fa-heart"></i></button>
+
+																						{% elif request.user.is_authenticated and wishlist_product == 1 %}
+																										<button style="background: #222;" class="add_to_cart_button" type="submit" title="Remove from wishlist"><i class="fa fa-heart"></i></button>
+
+																						{% endif %}
+
+																				</form>
+
+																				<div class="cart" style="margin: -67px 0 20px 89px;">
+
+																						{% csrf_token %}
+																						<input type="hidden" value="{{ product.id }}" name="product_id">
+
+																						{% if not cart_object %}
+																						<button id="add_to_cart" class="add_to_cart_button" type="submit">Add to cart</button>
+																						{% else %}
+																						<button id="add_to_cart" class="add_to_cart_button" type="submit">in cart</button>
+																						{% endif %}
+
+																				</div>
+
+
+
+
+																		<div class="product-inner-category">
+																				<p>Category:
+																					<a href="{% url 'shop' category_slug %}">{{ product.category|lower }}</a>.
+
+																				Tags:
+																						{% for tag in product.tag.all %}
+																								<a>{{ tag|lower }}{% if forloop.last %}</a>.{% else %}</a>,{% endif %}
+																						{% endfor %}
+
+																				</p>
+																		</div>
+
+																		<div role="tabpanel">
+																				<ul class="product-tab" role="tablist">
+																						<li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Description</a></li>
+																						<li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Reviews</a></li>
+																				</ul>
+																				<div class="tab-content">
+																						<div role="tabpanel" class="tab-pane fade in active" id="home">
+																								<h2>Product Description</h2>
+																								<p>{{ product.description|linebreaks }}</p>
+																						</div>
+																						<div role="tabpanel" class="tab-pane fade" id="profile">
+																								<h2>Reviews</h2>
+																								<div class="submit-review">
+																										<p><label for="name">Name</label> <input name="name" type="text"></p>
+																										<p><label for="email">Email</label> <input name="email" type="email"></p>
+																										<div class="rating-chooser">
+																												<p>Your rating</p>
+
+																												<div class="rating-wrap-post">
+																														<i class="fa fa-star"></i>
+																														<i class="fa fa-star"></i>
+																														<i class="fa fa-star"></i>
+																														<i class="fa fa-star"></i>
+																														<i class="fa fa-star"></i>
+																												</div>
+																										</div>
+																										<p><label for="review">Your review</label> <textarea name="review" id="" cols="30" rows="10"></textarea></p>
+																										<p><input type="submit" value="Submit"></p>
+																								</div>
+																						</div>
+																				</div>
+																		</div>
+																</div>
+														</div>
+												</div>
+
+
+												<div class="related-products-wrapper">
+														<h2 class="related-products-title">Related Products</h2>
+														<div class="related-products-carousel">
+
+																{% for accessuar in accessories %}
+
+																		<div class="single-product">
+																				<div class="product-f-image">
+																				{{ cart_object2 }}
+																						<img src="{{ MEDIA_URL }}{{ accessuar.cover }}" alt="">
+																						<div class="product-hover">
+
+
+																								<form action="{% url 'cart_add' %}" class="cart" method="POST">
+																									{% csrf_token %}
+																									<input type="hidden" value="{{ accessuar.id }}" name="product_id">
+																									{% if accessuar.is_in_cart %}
+																									<button class="add-to-cart-link" style="background-color: #222222; outline: none; border: none; cursor: default;"><i class="fa fa-shopping-cart"></i> in cart</button>
+																									{% else %}
+																									<button class="add-to-cart-link" id="add_to_cart" type="submit"><i class="fa fa-shopping-cart"></i> add to cart</button>
+																									{% endif %}
+																								</form>
+
+																								<a href="{% url 'product_view' accessuar.category|lower accessuar.slug %}" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+
+																						</div>
+																				</div>
+
+
+
+
+																				<h2><a href="{% url 'product_view' category_slug accessuar.slug %}">{{ accessuar.title }}</a></h2>
+
+																				<div class="product-carousel-price">
+
+																						{% if accessuar.old_price == None %}
+																								<ins>${{ accessuar.price|floatformat:"-2" }}</ins>
+																						{% else %}
+																								<ins style="color:#f95f5f">${{ accessuar.price|floatformat:"-2" }}</ins>
+																						{% endif %}
+
+																						{% if accessuar.old_price != None %}
+																								<del style="color:#5a88ca">${{ accessuar.old_price|floatformat:"-2" }}</del>
+																						{% endif %}
+
+																				</div>
+																		</div>
+
+																{% endfor %}
+
+														</div>
+												</div>
+										</div>
+								</div>
+						</div>
+				</div>
+		</div>
+
+{% endblock content %}

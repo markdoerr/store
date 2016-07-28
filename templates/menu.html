@@ -1,0 +1,77 @@
+{% block menu %}
+
+    <div class="mainmenu-area">
+        <div class="container">
+            <div class="row">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li
+                            {% block menu-Home-class %}
+                                {# class="active" #}
+                            {% endblock %}
+                        >
+                        <a href="index.html">Home</a></li>
+
+                        <li
+                            {% block menu-Shop-class %}
+                                {# class="active" #}
+                            {% endblock %}
+                        >
+                        <a href="shop.html">Shop page</a></li>
+
+                        <li
+                            {% block menu-Single-class %}
+                                {# class="active" #}
+                            {% endblock %}
+                        >
+                        <a href="single-product.html">Single product</a></li>
+
+                        <li
+                            {% block menu-Cart-class %}
+                                {# class="active" #}
+                            {% endblock %}
+                        >
+                        <a href="cart.html">Cart</a></li>
+
+                        <li
+                            {% block menu-Checkout-class %}
+                                {# class="active" #}
+                            {% endblock %}
+                        >
+                        <a href="checkout.html">Checkout</a></li>
+
+                        <li
+                            {% block menu-Category-class %}
+                                {# class="active" #}
+                            {% endblock %}
+                        >
+                        <a href="#">Category</a></li>
+
+                        <li
+                            {% block menu-Others-class %}
+                                {# class="active" #}
+                            {% endblock %}
+                        >
+                        <a href="#">Others</a></li>
+
+                        <li
+                            {% block menu-Contact-class %}
+                                {# class="active" #}
+                            {% endblock %}
+                        >
+                        <a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End mainmenu area -->
+
+{% endblock menu%}
